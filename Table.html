@@ -1,0 +1,65 @@
+<style type="text/css">
+    #Add input
+    { 
+     width: 100px;
+     height: 30px
+    }
+    #Delete input
+    { 
+     width: 100px;
+     height: 30px
+    }
+
+    #Clear input
+    { 
+     width: 100px;
+     height: 30px;
+     margin: auto auto auto 103
+    }
+
+ </style>
+
+<div id="Table">
+    <table border="5" id="tPersons"   width="50%"   cellpadding="4" cellspacing="3">
+        <thead>
+            <th>Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Age</th>
+        </thead>
+            <tbody>
+            </tbody>
+    </table>
+</div>
+
+
+<div id="Fields">
+        <p>
+            Id<input type="text" id="Id" >
+            First name<input type="text" id="Fn" >
+            Last Name<input type="text" id="Ln" >
+            Age<input type="text" id="Age" >
+        </p>
+    </div>
+
+	
+<input type="button" id="cre" onclick="create()" value="Create">
+<div style="display:inline-block">
+	<p><input type="button" id="rj" onclick="readJSON()" value="ReadJSON"></p>
+	<p><input type="button" id="rh" onclick="readHTML()" value="ReadHTML"></p>
+	<p><input type="button" id="rs" onclick="readXSLT()" value="ReadXSLT"></p>
+	<p><input type="button" id="rx" onclick="readXML()" value="ReadXML"></p>
+</div>
+<input type="button" id="upd" onclick="upd()" value="Update">
+<input type="button" id="del" onclick="del()" value="Delete">
+
+<form action="">
+  <input type="radio" id="MOCK" name="db" value="MOCK"> MOCK<br>
+  <input type="radio" id="MySql" name="db" value="MySql" checked="true"> MySql<br>
+</form>
+		
+
+
+<script src="Person.js"> </script>
+<script src="Reader.js" > </script>
+<script src="CUD.js" > </script>
