@@ -1,59 +1,62 @@
-function readJSON() 
-{
-	var persons = JSON.parse(requestRead("JSON"));
-	
-	var table = document.getElementById('tPersons').getElementsByTagName('tbody')[0];
-    table.innerHTML = "";
-	
-    persons.forEach(function(item) 
-    {
-        var newRow = table.insertRow(table.rows.length);
-        
-        var cellId = newRow.insertCell(0);
-        var cellFn = newRow.insertCell(1);
-        var cellLn = newRow.insertCell(2);
-        var cellAge = newRow.insertCell(3);
-
-        cellId.appendChild(document.createTextNode(item.id));
-        cellFn.appendChild(document.createTextNode(item.fn));
-        cellLn.appendChild(document.createTextNode(item.ln));
-        cellAge.appendChild(document.createTextNode(item.age));
-    });
-}
-
-
-function readXML() 
-{
-	var xmlDoc = new DOMParser().parseFromString(requestRead("XML"), "text/xml");
-	
-	var table = document.getElementById('tPersons').getElementsByTagName('tbody')[0];
-    table.innerHTML = "";
-	
-	for(var i = 0; i<xmlDoc.firstChild.childElementCount; i++)
+class Factory {
+	static getReader(format) 
 	{
-		var newRow = table.insertRow(table.rows.length);
-        
-        var cellId = newRow.insertCell(0);
-        var cellFn = newRow.insertCell(1);
-        var cellLn = newRow.insertCell(2);
-        var cellAge = newRow.insertCell(3);
-
-        cellId.appendChild(document.createTextNode(xmlDoc.getElementsByTagName("Id")[i].childNodes[0].nodeValue));
-        cellFn.appendChild(document.createTextNode(xmlDoc.getElementsByTagName("FirstName")[i].childNodes[0].nodeValue));
-        cellLn.appendChild(document.createTextNode(xmlDoc.getElementsByTagName("LastName")[i].childNodes[0].nodeValue));
-        cellAge.appendChild(document.createTextNode(xmlDoc.getElementsByTagName("Age")[i].childNodes[0].nodeValue));
-	}       
+		var reader = null;
+		switch(format)
+		{
+			case 'JSON':
+				reader = new JSONReader();   
+				break;
+			case 'XML':
+				reader = new XMLReader();   
+				break;
+			case 'XSLT':
+				reader = new XSLTReader();   
+				break;
+			case 'HTML':
+				reader = new HTMLReader();   
+				break;
+		}
+		return reader;
+	}
 }
 
-function readHTML() 
-{
-	var table = document.getElementById('tPersons').getElementsByTagName('tbody')[0];
-    table.innerHTML = requestRead("HTML");  
+class Reader {
+	Read(response)
+	{
+	}
+}
+class JSONReader extends Reader
+{	
+	Read(jsonText)
+	{
+		var persons = JSON.parse(jsonText);
+	
+		var table = document.getElementById('tPersons').getElementsByTagName('tbody')[0];
+		table.innerHTML = "";
+		
+		persons.forEach(function(item) 
+		{
+			var newRow = table.insertRow(table.rows.length);
+			
+			var cellId = newRow.insertCell(0);
+			var cellFn = newRow.insertCell(1);
+			var cellLn = newRow.insertCell(2);
+			var cellAge = newRow.insertCell(3);
+
+			cellId.appendChild(document.createTextNode(item.id));
+			cellFn.appendChild(document.createTextNode(item.fn));
+			cellLn.appendChild(document.createTextNode(item.ln));
+			cellAge.appendChild(document.createTextNode(item.age));
+		});
+		return table.innerHTML;
+	}
 }
 
-function readXSLT() 
+class XSLTReader extends Reader
 {
-		xmlText = requestRead("XSLT");
+	Read(xmlText)
+	{
 		var xsltText =		
 		'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'+
 		'<xsl:output method="html" encoding="UTF-8"/>'+
@@ -83,7 +86,7 @@ function readXSLT()
 		
         var xmlDoc = new DOMParser().parseFromString(xmlText, "text/xml");
         var xslDoc = new DOMParser().parseFromString(xsltText, "text/xml");
-
+		
         if (window.ActiveXObject ) 
 		{
             var ex = xmlDoc.transformNode(xslDoc);
@@ -93,19 +96,46 @@ function readXSLT()
 		{
             var xsltProcessor = new XSLTProcessor();
             xsltProcessor.importStylesheet(xslDoc);
-            resultDocument = xsltProcessor.transformToFragment(xmlDoc, document);
+            var resultDocument = xsltProcessor.transformToFragment(xmlDoc, document);
             document.getElementById("Table").innerHTML = "";
             document.getElementById("Table").appendChild(resultDocument);
         }
+		return document.getElementById("Table").innerHTML;
+	}
 }
 
-function requestRead(method)
+class XMLReader extends Reader
 {
-	var db = document.querySelector('input[name="db"]:checked').value;
-	var req = "do=Read&dbtype="+db+"&method="+method;
-	var rr = new XMLHttpRequest();
-	rr.open('GET', 'PHP/Server.php?'+req, false);
-	rr.send(null);
-	return rr.responseText;
+	Read(xmlText)
+	{
+		var xmlDoc = new DOMParser().parseFromString(xmlText, "text/xml");
+	
+		var table = document.getElementById('tPersons').getElementsByTagName('tbody')[0];
+		table.innerHTML = "";
+		
+		for(var i = 0; i<xmlDoc.firstChild.childElementCount; i++)
+		{
+			var newRow = table.insertRow(table.rows.length);
+			
+			var cellId = newRow.insertCell(0);
+			var cellFn = newRow.insertCell(1);
+			var cellLn = newRow.insertCell(2);
+			var cellAge = newRow.insertCell(3);
+
+			cellId.appendChild(document.createTextNode(xmlDoc.getElementsByTagName("Id")[i].childNodes[0].nodeValue));
+			cellFn.appendChild(document.createTextNode(xmlDoc.getElementsByTagName("FirstName")[i].childNodes[0].nodeValue));
+			cellLn.appendChild(document.createTextNode(xmlDoc.getElementsByTagName("LastName")[i].childNodes[0].nodeValue));
+			cellAge.appendChild(document.createTextNode(xmlDoc.getElementsByTagName("Age")[i].childNodes[0].nodeValue));
+		} 
+		return table.innerHTML;
+	}		
+}
+
+class HTMLReader extends Reader
+{
+	Read(text)
+	{
+		return text;
+	}		
 }
 

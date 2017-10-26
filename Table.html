@@ -44,16 +44,19 @@
 
 	
 <input type="button" id="cre" onclick="create()" value="Create">
-<div style="display:inline-block">
-	<p><input type="button" id="rj" onclick="readJSON()" value="ReadJSON"></p>
-	<p><input type="button" id="rh" onclick="readHTML()" value="ReadHTML"></p>
-	<p><input type="button" id="rs" onclick="readXSLT()" value="ReadXSLT"></p>
-	<p><input type="button" id="rx" onclick="readXML()" value="ReadXML"></p>
-</div>
+<input type="button" id="read" onclick="read()" value="Read">
 <input type="button" id="upd" onclick="upd()" value="Update">
 <input type="button" id="del" onclick="del()" value="Delete">
 
 <form action="">
+  <input type="radio" id="json" name="read" value="JSON" checked="true"> JSON<br>
+  <input type="radio" id="xml" name="read" value="XML"> XML<br>
+  <input type="radio" id="html" name="read" value="HTML"> HTML<br>
+  <input type="radio" id="xslt" name="read" value="XSLT"> XSLT<br>
+</form>
+
+
+<form action="" style="display:inline-block">
   <input type="radio" id="MOCK" name="db" value="MOCK"> MOCK<br>
   <input type="radio" id="MySql" name="db" value="MySql" checked="true"> MySql<br>
 </form>
@@ -62,4 +65,5 @@
 
 <script src="Person.js"> </script>
 <script src="Reader.js" > </script>
+<script src="Read.js" > </script>
 <script src="CUD.js" > </script>
