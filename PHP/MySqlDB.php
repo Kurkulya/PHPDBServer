@@ -47,14 +47,14 @@ class MySqlDB implements IPersonDao
 		$update="UPDATE ". $this->table ." SET FirstName='".$person->fn . "',
 									   LastName='".$person->ln . "',
 									   Age=".$person->age . 
-								 " WHERE Id=".$person->id;
+								 " WHERE Person_Id=".$person->id;
 		$con->query($update);
 		$con->close();
 	}
 	public function Create($person)
 	{
 		$con=new mysqli($this->host, $this->user, $this->password, $this->db);
-		$create="INSERT INTO ". $this->table ." ( ID, FirstName, LastName, Age) 
+		$create="INSERT INTO ". $this->table ." ( Person_Id, FirstName, LastName, Age) 
 						   VALUES (". $person->id . ", '" . $person->fn . "' , '" . $person->ln . "' ," . $person->age . ")";
 		$con->query($create);
 		$con->close();
@@ -62,7 +62,7 @@ class MySqlDB implements IPersonDao
     public function Delet($person)
 	{	
 		$con=new mysqli($this->host, $this->user, $this->password, $this->db);
-		$delete="DELETE FROM ". $this->table ." WHERE Id=".$person->id;
+		$delete="DELETE FROM ". $this->table ." WHERE Person_Id=".$person->id;
 		$con->query($delete);
 		$con->close();
 	}

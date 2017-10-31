@@ -14,6 +14,7 @@ class PerformFactory
 			case "XML": $method = new PXML(); break;
 			case "XSLT": $method = new PXML(); break;
 			case "JSON": $method = new PJSON(); break;
+			case "YAML": $method = new PYAML(); break;
 		}
 
 		return $method;

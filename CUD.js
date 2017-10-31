@@ -17,8 +17,20 @@ function requestCUD(dodb)
 {
 	var db = document.querySelector('input[name="db"]:checked').value;
 	var p = getPerson();
-	var req = "id="+p.id+"&fn="+p.fn+"&ln="+p.ln+"&age="+p.age+"&do="+dodb+"&dbtype="+db;
+	var obj = {
+	    command: dodb,
+		data: {
+			database: db,
+			person: p
+		},
+		resp_type: ""
+	}
+	
+	var req = 'req=' + Builder.buildRequest("POST", obj);
+	
 	var rr = new XMLHttpRequest();
-	rr.open('GET', 'PHP/Server.php?'+req, false);
-	rr.send(null);
+	
+	rr.open('POST', 'PHP/Server.php', false);
+	rr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	rr.send(req);
 }

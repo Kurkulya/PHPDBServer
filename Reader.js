@@ -16,6 +16,9 @@ class Factory {
 			case 'HTML':
 				reader = new HTMLReader();   
 				break;
+			case 'YAML':
+				reader = new YAMLReader();   
+				break;
 		}
 		return reader;
 	}
@@ -136,6 +139,32 @@ class HTMLReader extends Reader
 	Read(text)
 	{
 		return text;
+	}		
+}
+
+class YAMLReader extends Reader
+{
+	Read(text)
+	{
+		var arr = text.split('\n');
+				
+		var table = document.getElementById('tPersons').getElementsByTagName('tbody')[0];
+		table.innerHTML = "";
+		for(var i = 1; i < arr.length; i+=4)
+		{
+			var newRow = table.insertRow(table.rows.length);
+			
+			var cellId = newRow.insertCell(0);
+			var cellFn = newRow.insertCell(1);
+			var cellLn = newRow.insertCell(2);
+			var cellAge = newRow.insertCell(3);
+
+			cellId.appendChild(document.createTextNode(arr[i].split(' ').pop()));
+			cellFn.appendChild(document.createTextNode(arr[i + 1].split(' ').pop()));
+			cellLn.appendChild(document.createTextNode(arr[i + 2].split(' ').pop()));
+			cellAge.appendChild(document.createTextNode(arr[i + 3].split(' ').pop()));
+		}
+		return table.innerHTML;
 	}		
 }
 

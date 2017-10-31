@@ -53,4 +53,20 @@ class PXML implements IPerformData
 	}
 }
 
+class PYAML implements IPerformData
+{
+	public function Perform($people)
+	{
+		$echo = "Persons:";	
+		for ($i = 0 ; $i < count($people) ; ++$i)
+		{
+			$echo .=  "\n- Id: ".$people[$i]->id;
+			$echo .=  "\n\tFirstName: ".$people[$i]->fn;
+			$echo .=  "\n\tLastName: ".$people[$i]->ln;
+			$echo .=  "\n\tAge: ".$people[$i]->age;
+		}
+		return $echo;
+	}
+}
+
 ?>

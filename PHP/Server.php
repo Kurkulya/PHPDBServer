@@ -1,44 +1,36 @@
 <?php
 require_once 'Person.php';
 require_once 'DBFactory.php';
-
-if($_GET['do'] == "Read")
+$request;
+if($_SERVER['REQUEST_METHOD'] === 'POST')
 {
-	$dbtype = $_GET['dbtype'];
-	$do = $_GET['do'];
-	$method = $_GET['method'];
+	$xml = simplexml_load_string($_POST['req'], "SimpleXMLElement", LIBXML_NOCDATA);
+	$json = json_encode($xml);
+	$request = json_decode($json);
 }
-else
+else if($_SERVER['REQUEST_METHOD'] === 'GET')
 {
-	$dbtype = $_GET['dbtype'];
-	$id = $_GET['id'];
-	$fn = $_GET['fn'];
-	$ln = $_GET['ln'];
-	$age = $_GET['age'];
-	$do = $_GET['do'];	
+	$request = json_decode($_GET['req']);	
 }
 
+$db = DBFactory::GetInstance($request->data->database);
 
-$db = DBFactory::GetInstance($dbtype);
-
+$do = $request->command;
 
 if($do == "Create")
 {
-	$person = new Person($id,$fn,$ln,$age);
-	$db->Create($person);
+	$db->Create($request->data->person);
 }
 else if($do == "Update")
 {
-	$person = new Person($id,$fn,$ln,$age);
-	$db->Update($person);
+	$db->Update($request->data->person);
 }
 else if($do == "Delete")
-{		
-	$person = new Person($id,$fn,$ln,$age);							 
-	$db->Delet($person);
+{								 
+	$db->Delet($request->data->person);
 }
 else if($do == "Read")
 {									 
-	echo $db->Read($method);
+	echo $db->Read($request->resp_type);
 }
 ?>
